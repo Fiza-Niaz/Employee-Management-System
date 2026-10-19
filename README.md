@@ -22,6 +22,6 @@ A full-stack web application built using the MERN stack (MongoDB, Express.js, Re
 
 **Backend:** Node.js, Express.js
 
-**Database:** MongoDB 
+**Database:** MongoDB Atlas
 
 **Authentication:** JSON Web Tokens (JWT), Bcrypt.js
