@@ -35,13 +35,16 @@ app.use((req, res, next) => {
 
     return next();
 });
+
 app.use(express.json({ limit: '1mb' }));
+
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 app.use('/api/auth', authRoutes);
 app.use('/api/employees', employeeRoutes);
 app.use('/api/departments', departmentRoutes);
 
 app.use((req, res) => res.status(404).json({ message: 'Route not found' }));
+
 app.use((error, req, res, next) => {
     if (res.headersSent) {
         return next(error);
@@ -56,6 +59,11 @@ app.use((error, req, res, next) => {
     return res.status(500).json({ message: 'Internal server error' });
 });
 
+// Ensure database connects whether imported as a module on Vercel or run locally
+connectDB().catch((error) => {
+    console.error('Failed to connect to database on startup:', error.message);
+});
+
 const start = async () => {
     if (
         !process.env.JWT_SECRET ||
@@ -64,8 +72,11 @@ const start = async () => {
     ) {
         throw new Error('JWT_SECRET must be set to a random value of at least 32 characters');
     }
-    await connectDB();
-    app.listen(port, () => console.log(`Server listening on port ${port}`));
+
+    // Only listen on a port if running locally
+    if (require.main === module) {
+        app.listen(port, () => console.log(`Server listening on port ${port}`));
+    }
 };
 
 if (require.main === module) {
