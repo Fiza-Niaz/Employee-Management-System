@@ -36,7 +36,7 @@ const seedAdmin = async () => {
         password,
         role: 'admin'
     });
-    console.log(`Administrator ${email} created`);
+    console.log(`Administrator ${email} created with ${password} character password`);
 };
 
 seedAdmin()
